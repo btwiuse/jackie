@@ -71,7 +71,7 @@ type ApiV1XuperKeypairNewResponse struct {
 
 func (t *ApiV1XuperKeypairNew) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, &ApiV1XuperKeypairNewResponse{
-		Address:  "cafebabe",
+		Address: "cafebabe",
 		Pubkey:  "deadbeef",
 		Privkey: time.Now().Local().String(),
 	})

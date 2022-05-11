@@ -4,7 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/long2ice/swagin"
-	"github.com/long2ice/swagin/security"
+	// "github.com/long2ice/swagin/security"
 	"log"
 )
 
@@ -14,19 +14,21 @@ func main() {
 
 	// Registering func(c *gin.Context) is accepted,
 	// but the OpenAPI generator will ignore the operation and it won't appear in the specification.
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
+	/*
+		r.GET("/ping", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "pong",
+			})
 		})
-	})
+	*/
 
 	app := swagin.NewFromEngine(r, NewSwagger())
-	subApp := swagin.NewFromEngine(r, NewSwagger())
+	// subApp := swagin.NewFromEngine(r, NewSwagger())
 	// apiV1 := swagin.NewFromEngine(r, NewSwagger())
 
 	// apiV1XuperGroup := apiV1.Group("/xuper", swagin.Tags("XuperChain"))
-	apiV1XuperGroup := app.Group("/api/v1/xuper", swagin.Tags("XuperChain"))
-	apiV1XuperGroup.GET("/hello", apiV1XuperHello)
+	apiV1XuperGroup := app.Group("/api/v1/xuper", swagin.Tags("XuperChainV1"))
+	// apiV1XuperGroup.GET("/hello", apiV1XuperHello)
 	apiV1XuperGroup.POST("/keypair/new", apiV1XuperKeypairNew)
 
 	/*
@@ -35,8 +37,8 @@ func main() {
 			subApp := swagin.New(NewSwagger())
 	*/
 
-	subApp.GET("/noModel", noModel)
-	app.Mount("/sub", subApp)
+	// subApp.GET("/noModel", noModel)
+	// app.Mount("/sub", subApp)
 	// app.Mount("/api/v1", apiV1)
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
@@ -45,17 +47,19 @@ func main() {
 		AllowCredentials: true,
 	}))
 	app.GET("/health", health)
-	queryGroup := app.Group("/query", swagin.Tags("Query"))
-	queryGroup.GET("/list", queryList)
-	queryGroup.GET("/:id", queryPath)
-	queryGroup.DELETE("", query)
+	/*
+		queryGroup := app.Group("/query", swagin.Tags("Query"))
+		queryGroup.GET("/list", queryList)
+		queryGroup.GET("/:id", queryPath)
+		queryGroup.DELETE("", query)
 
-	app.GET("/noModel", noModel)
+		app.GET("/noModel", noModel)
 
-	formGroup := app.Group("/form", swagin.Tags("Form"), swagin.Security(&security.Bearer{}))
-	formGroup.POST("/encoded", formEncode)
-	formGroup.PUT("", body)
-	formGroup.POST("/file", file)
+		formGroup := app.Group("/form", swagin.Tags("Form"), swagin.Security(&security.Bearer{}))
+		formGroup.POST("/encoded", formEncode)
+		formGroup.PUT("", body)
+		formGroup.POST("/file", file)
+	*/
 
 	port := ":8085"
 
