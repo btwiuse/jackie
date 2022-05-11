@@ -64,13 +64,15 @@ func (t *ApiV1XuperHello) Handler(c *gin.Context) {
 type ApiV1XuperKeypairNew struct{}
 
 type ApiV1XuperKeypairNewResponse struct {
+	Address string `json:"address" default:"addraddraddr"`
 	Pubkey  string `json:"privkey" default:"privprivpriv"`
 	Privkey string `json:"pubkey" default:"pubpubpub"`
 }
 
 func (t *ApiV1XuperKeypairNew) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, &ApiV1XuperKeypairNewResponse{
-		Pubkey:  "pub",
+		Address:  "cafebabe",
+		Pubkey:  "deadbeef",
 		Privkey: time.Now().Local().String(),
 	})
 }
