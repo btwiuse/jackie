@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/long2ice/swagin"
 	"github.com/long2ice/swagin/security"
+	"log"
 )
 
 func main() {
@@ -22,6 +22,12 @@ func main() {
 
 	app := swagin.NewFromEngine(r, NewSwagger())
 	subApp := swagin.NewFromEngine(r, NewSwagger())
+	// apiV1 := swagin.NewFromEngine(r, NewSwagger())
+
+	// apiV1XuperGroup := apiV1.Group("/xuper", swagin.Tags("XuperChain"))
+	apiV1XuperGroup := app.Group("/api/v1/xuper", swagin.Tags("XuperChain"))
+	apiV1XuperGroup.GET("/hello", apiV1XuperHello)
+	apiV1XuperGroup.POST("/keypair/new", apiV1XuperKeypairNew)
 
 	/*
 		You can use default Gin engin:
@@ -31,12 +37,14 @@ func main() {
 
 	subApp.GET("/noModel", noModel)
 	app.Mount("/sub", subApp)
+	// app.Mount("/api/v1", apiV1)
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"*"},
 		AllowHeaders:     []string{"*"},
 		AllowCredentials: true,
 	}))
+	app.GET("/health", health)
 	queryGroup := app.Group("/query", swagin.Tags("Query"))
 	queryGroup.GET("/list", queryList)
 	queryGroup.GET("/:id", queryPath)
@@ -51,8 +59,6 @@ func main() {
 
 	port := ":8085"
 
-	fmt.Printf("Now you can visit http://127.0.0.1%v/docs or http://127.0.0.1%v/redoc to see the api docs. Have fun!", port, port)
-	if err := app.Run(port); err != nil {
-		panic(err)
-	}
+	log.Printf("Now you can visit http://127.0.0.1%v/docs or http://127.0.0.1%v/redoc to see the api docs. Have fun!", port, port)
+	log.Fatalln(app.Run(port))
 }

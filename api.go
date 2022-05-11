@@ -6,6 +6,7 @@ import (
 	"github.com/long2ice/swagin/security"
 	"mime/multipart"
 	"net/http"
+	"time"
 )
 
 type TestQuery struct {
@@ -49,6 +50,37 @@ type TestForm struct {
 
 func (t *TestForm) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, t)
+}
+
+type ApiV1XuperHello struct {
+	World string `json:"hello" default:"world"`
+}
+
+func (t *ApiV1XuperHello) Handler(c *gin.Context) {
+	t.World = "world"
+	c.JSON(http.StatusOK, t)
+}
+
+type ApiV1XuperKeypairNew struct{}
+
+type ApiV1XuperKeypairNewResponse struct {
+	Pubkey  string `json:"privkey" default:"privprivpriv"`
+	Privkey string `json:"pubkey" default:"pubpubpub"`
+}
+
+func (t *ApiV1XuperKeypairNew) Handler(c *gin.Context) {
+	c.JSON(http.StatusOK, &ApiV1XuperKeypairNewResponse{
+		Pubkey:  "pub",
+		Privkey: time.Now().Local().String(),
+	})
+}
+
+type Health struct {
+	OK bool `json:"ok" default:"true"`
+}
+
+func (t *Health) Handler(c *gin.Context) {
+	c.JSON(http.StatusOK, Health{OK: true})
 }
 
 type TestNoModel struct {

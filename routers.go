@@ -30,6 +30,16 @@ var (
 			},
 		}),
 	)
+	health = router.New(
+		&Health{},
+		router.Summary("Health check"),
+		router.Description("Health check. Should return `200 OK`"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: Health{OK: true},
+			},
+		}),
+	)
 	noModel = router.New(
 		&TestNoModel{},
 		router.Summary("Test no model"),
@@ -58,5 +68,23 @@ var (
 		&TestFile{},
 		router.Summary("Test file upload"),
 		router.ContentType(binding.MIMEMultipartPOSTForm),
+	)
+	apiV1XuperHello = router.New(
+		&ApiV1XuperHello{},
+		router.Summary("Xuper Hello"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperHello{},
+			},
+		}),
+	)
+	apiV1XuperKeypairNew = router.New(
+		&ApiV1XuperKeypairNew{},
+		router.Summary("New Keypair"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperKeypairNewResponse{},
+			},
+		}),
 	)
 )
