@@ -38,7 +38,7 @@ Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-
 
 ## Docs
 
-- /docs
-- /redoc
-- /rapidoc
+- [/docs](https://jackie-chain.herokuapp.com/docs)
+- [/redoc](https://jackie-chain.herokuapp.com/redoc)
+- [/rapidoc](https://jackie-chain.herokuapp.com/rapidoc)
 
