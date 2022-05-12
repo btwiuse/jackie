@@ -123,4 +123,13 @@ var (
 			},
 		}),
 	)
+	apiV1XuperAccountNew = router.New(
+		&ApiV1XuperAccountNew{},
+		router.Summary("New Contract Account"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperAccountNewResponse{},
+			},
+		}),
+	)
 )

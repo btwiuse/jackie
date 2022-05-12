@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"mime/multipart"
 	"net/http"
@@ -143,6 +144,40 @@ type ApiV1XuperHello struct {
 func (t *ApiV1XuperHello) Handler(c *gin.Context) {
 	t.World = "world"
 	c.JSON(http.StatusOK, t)
+}
+
+type ApiV1XuperAccountNew struct {
+	Address string `json:"address" default:"iHXRXwahx4yf6CwYyDQGvJYj4o39Jdgrs"`
+	Pubkey  string `json:"privkey" default:"{...}"`
+	Privkey string `json:"pubkey" default:"{...}"`
+}
+
+type ApiV1XuperAccountNewResponse struct {
+	Account     string `json:"account" default:"XC1111111111111111@xuper"`
+	Transaction string `json:"tx" default:"cb057a9dce7f8a1d928c46ceb84e8765fab43a5ecf85bf061c59bbbc2e717932"`
+}
+
+func (t *ApiV1XuperAccountNew) Handler(c *gin.Context) {
+	var resp ApiV1XuperAccountNewResponse
+
+	jb, err := json.Marshal(t)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+	keypair := string(jb)
+
+	cmd := exec.Command("account.new", keypair)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	err = yaml.Unmarshal(out, &resp)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, resp)
 }
 
 type ApiV1XuperKeypairNew struct{}

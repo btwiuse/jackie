@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+# cd $(dirname $(realpath $0))
+
+dir=$(mktemp -d)
+
+echo "$1" | jq -jr .pubkey > $dir/public.key
+echo "$1" | jq -jr .privkey > $dir/private.key
+echo "$1" | jq -jr .address > $dir/address
+
+# echo dir: $dir
+# rm -r $dir
+# exit 0
+
+rand(){
+  echo \
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  $(( $RANDOM % 10 ))\
+  | tr -d ' '
+}
+
+account="$(rand)"
+
+xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
+
+cat<<EOF
+account: "$(cat $dir/log | grep 'account name:' | sed 's,account name: ,,g')"
+tx: "$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
+EOF
+
+rm -r $dir
