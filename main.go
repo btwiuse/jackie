@@ -47,6 +47,9 @@ func main() {
 		apiV1XuperGroup.GET("/balance/:address", apiV1XuperBalance)
 		apiV1XuperGroup.POST("/faucet/:address", apiV1XuperFaucet)
 		apiV1XuperGroup.GET("/transaction/:id", apiV1XuperQueryTx)
+		apiV1XuperGroup.POST("/contract/deploy", apiV1XuperHello)
+		apiV1XuperGroup.POST("/contract/invoke", apiV1XuperHello)
+		apiV1XuperGroup.GET("/contract/query", apiV1XuperHello)
 	}
 
 	/*
