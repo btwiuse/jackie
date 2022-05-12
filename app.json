@@ -1,0 +1,8 @@
+{
+  "name": "jackie",
+  "description": "Jack of all trades, master of some",
+  "repository": "https://github.com/btwiuse/jackie",
+  "logo": "https://www.movieplus.jp/film_img/CS-0000000200800677-000_l.jpg",
+  "keywords": ["xuperchain", "openchain"],
+  "stack": "container"
+}

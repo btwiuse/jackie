@@ -1,12 +1,23 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/long2ice/swagin"
 	// "github.com/long2ice/swagin/security"
-	"log"
 )
+
+func getPort() string {
+	const DEFAULT_PORT = "8085"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = DEFAULT_PORT
+	}
+	return ":" + port
+}
 
 func main() {
 	// Use customize Gin engine
@@ -61,7 +72,7 @@ func main() {
 		formGroup.POST("/file", file)
 	*/
 
-	port := ":8085"
+	port := getPort()
 
 	log.Printf("Now you can visit http://127.0.0.1%v/docs or http://127.0.0.1%v/redoc to see the api docs. Have fun!", port, port)
 	log.Fatalln(app.Run(port))
