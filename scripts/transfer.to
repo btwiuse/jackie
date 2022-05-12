@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# cd $(dirname $(realpath $0))
+
+addr="${1}"
+amount="${2:-1000}"
+
+if ! [[ -n "${addr}" ]]; then
+  addr="$(cat data/keys/address)"
+fi
+
+xchain-cli transfer --to "${addr}" --amount "${amount}"

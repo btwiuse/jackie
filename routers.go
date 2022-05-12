@@ -87,6 +87,15 @@ var (
 			},
 		}),
 	)
+	apiV1XuperFaucet = router.New(
+		&ApiV1XuperFaucet{},
+		router.Summary("Xuper Faucet"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperFaucetResponse{},
+			},
+		}),
+	)
 	apiV1XuperHello = router.New(
 		&ApiV1XuperHello{},
 		router.Summary("Xuper Hello"),

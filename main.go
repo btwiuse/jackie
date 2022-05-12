@@ -43,6 +43,7 @@ func main() {
 	apiV1XuperGroup.POST("/keypair/new", apiV1XuperKeypairNew)
 	apiV1XuperGroup.GET("/balance", apiV1XuperAdminBalance)
 	apiV1XuperGroup.GET("/balance/:address", apiV1XuperBalance)
+	apiV1XuperGroup.POST("/faucet/:address", apiV1XuperFaucet)
 
 	/*
 		You can use default Gin engin:
