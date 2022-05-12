@@ -5,6 +5,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os/exec"
+	"strings"
 
 	"github.com/ghodss/yaml"
 	"github.com/gin-gonic/gin"
@@ -52,6 +53,44 @@ type TestForm struct {
 
 func (t *TestForm) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, t)
+}
+
+type ApiV1XuperAdminBalance struct{}
+
+func (t *ApiV1XuperAdminBalance) Handler(c *gin.Context) {
+	var resp ApiV1XuperBalanceResponse
+
+	cmd := exec.Command("balance.of")
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	resp = ApiV1XuperBalanceResponse{Balance: strings.TrimSpace(string(out))}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+type ApiV1XuperBalance struct {
+	Address string `uri:"address" binding:"required" json:"address" default:"0"`
+}
+
+type ApiV1XuperBalanceResponse struct {
+	Balance string `json:"balance" default:"0"`
+}
+
+func (t *ApiV1XuperBalance) Handler(c *gin.Context) {
+	var resp ApiV1XuperBalanceResponse
+
+	cmd := exec.Command("balance.of", t.Address)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	resp = ApiV1XuperBalanceResponse{Balance: strings.TrimSpace(string(out))}
+
+	c.JSON(http.StatusOK, resp)
 }
 
 type ApiV1XuperHello struct {

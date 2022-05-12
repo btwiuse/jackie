@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# cd $(dirname $(realpath $0))
+
+addr="${1}"
+
+if ! [[ -n "${addr}" ]]; then
+  addr="$(cat data/keys/address)"
+fi
+
+xchain-cli account balance "${addr}"

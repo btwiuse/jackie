@@ -69,6 +69,24 @@ var (
 		router.Summary("Test file upload"),
 		router.ContentType(binding.MIMEMultipartPOSTForm),
 	)
+	apiV1XuperAdminBalance = router.New(
+		&ApiV1XuperAdminBalance{},
+		router.Summary("Xuper Admin Balance"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperBalanceResponse{},
+			},
+		}),
+	)
+	apiV1XuperBalance = router.New(
+		&ApiV1XuperBalance{},
+		router.Summary("Xuper Balance"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperBalanceResponse{},
+			},
+		}),
+	)
 	apiV1XuperHello = router.New(
 		&ApiV1XuperHello{},
 		router.Summary("Xuper Hello"),

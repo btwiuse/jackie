@@ -41,6 +41,8 @@ func main() {
 	apiV1XuperGroup := app.Group("/api/v1/xuper", swagin.Tags("XuperChainV1"))
 	// apiV1XuperGroup.GET("/hello", apiV1XuperHello)
 	apiV1XuperGroup.POST("/keypair/new", apiV1XuperKeypairNew)
+	apiV1XuperGroup.GET("/balance", apiV1XuperAdminBalance)
+	apiV1XuperGroup.GET("/balance/:address", apiV1XuperBalance)
 
 	/*
 		You can use default Gin engin:
