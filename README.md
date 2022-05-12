@@ -1,5 +1,10 @@
 # Jackie Chain
 
+[![Go 1.18+](https://img.shields.io/github/go-mod/go-version/btwiuse/jackie)](https://golang.org/dl/)
+[![License](https://img.shields.io/github/license/btwiuse/jackie?color=%23000&style=flat-round)](https://github.com/btwiuse/jackie/blob/master/LICENSE)
+[![DockerHub](https://img.shields.io/docker/pulls/btwiuse/jackie.svg)](https://hub.docker.com/r/btwiuse/jackie)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/btwiuse/jackie)
+
 Jack of all trades, master of some.
 
 ![Jackie Chain](https://www.movieplus.jp/film_img/CS-0000000200800677-000_l.jpg)
