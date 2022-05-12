@@ -39,7 +39,6 @@ func main() {
 
 	// apiV1XuperGroup := apiV1.Group("/xuper", swagin.Tags("XuperChain"))
 	apiV1XuperGroup := app.Group("/api/v1/xuper", swagin.Tags("XuperChainV1"))
-	// apiV1XuperGroup.GET("/hello", apiV1XuperHello)
 	{
 		apiV1XuperGroup.POST("/keypair/new", apiV1XuperKeypairNew)
 		apiV1XuperGroup.POST("/account/new", apiV1XuperAccountNew)
@@ -52,6 +51,18 @@ func main() {
 		apiV1XuperGroup.GET("/contract/query", apiV1XuperHello)
 	}
 
+	apiV1Group := app.Group("/api/v1", swagin.Tags("JackieChainV1"))
+	{
+		apiV1Group.POST("/:chain/keypair/new", apiV1XuperKeypairNew)
+		apiV1Group.POST("/:chain/account/new", apiV1XuperAccountNew)
+		apiV1Group.GET("/:chain/balance", apiV1XuperAdminBalance)
+		apiV1Group.GET("/:chain/balance/:address", apiV1XuperBalance)
+		apiV1Group.POST("/:chain/faucet/:address", apiV1XuperFaucet)
+		apiV1Group.GET("/:chain/transaction/:id", apiV1XuperQueryTx)
+		apiV1Group.POST("/:chain/contract/deploy", apiV1XuperHello)
+		apiV1Group.POST("/:chain/contract/invoke", apiV1XuperHello)
+		apiV1Group.GET("/:chain/contract/query", apiV1XuperHello)
+	}
 	/*
 		You can use default Gin engin:
 			app := swagin.New(NewSwagger())
