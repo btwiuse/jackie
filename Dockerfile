@@ -16,7 +16,8 @@ RUN make
 #FROM ubuntu:18.04
 FROM btwiuse/xuper
 WORKDIR /home/xchain
-#RUN apt update&& apt install -y build-essential
+RUN apt update
+RUN apt install -y build-essential vim jq
 COPY --from=builder /home/xchain/output /usr/local/bin
 COPY --from=builder /home/xchain/scripts /usr/local/bin
 RUN ln -s $PWD/bin/* /usr/local/bin
