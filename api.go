@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/long2ice/swagin/security"
 	"mime/multipart"
 	"net/http"
-	"time"
+	"os/exec"
+
+	"github.com/ghodss/yaml"
+	"github.com/gin-gonic/gin"
+	"github.com/long2ice/swagin/security"
 )
 
 type TestQuery struct {
@@ -64,17 +66,26 @@ func (t *ApiV1XuperHello) Handler(c *gin.Context) {
 type ApiV1XuperKeypairNew struct{}
 
 type ApiV1XuperKeypairNewResponse struct {
-	Address string `json:"address" default:"addraddraddr"`
-	Pubkey  string `json:"privkey" default:"privprivpriv"`
-	Privkey string `json:"pubkey" default:"pubpubpub"`
+	Address string `json:"address" default:"iHXRXwahx4yf6CwYyDQGvJYj4o39Jdgrs"`
+	Pubkey  string `json:"privkey" default:"{...}"`
+	Privkey string `json:"pubkey" default:"{...}"`
 }
 
 func (t *ApiV1XuperKeypairNew) Handler(c *gin.Context) {
-	c.JSON(http.StatusOK, &ApiV1XuperKeypairNewResponse{
-		Address: "cafebabe",
-		Pubkey:  "deadbeef",
-		Privkey: time.Now().Local().String(),
-	})
+	var resp ApiV1XuperKeypairNewResponse
+
+	cmd := exec.Command("keypair.new")
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	err = yaml.Unmarshal(out, &resp)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, resp)
 }
 
 type Health struct {

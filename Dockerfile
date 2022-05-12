@@ -17,7 +17,8 @@ RUN make
 FROM btwiuse/xuper
 WORKDIR /home/xchain
 #RUN apt update&& apt install -y build-essential
-COPY --from=builder /home/xchain/output /usr/bin
-RUN ln -s $PWD/bin/* /usr/bin
+COPY --from=builder /home/xchain/output /usr/local/bin
+COPY --from=builder /home/xchain/scripts /usr/local/bin
+RUN ln -s $PWD/bin/* /usr/local/bin
 EXPOSE 8085 37101 47101
 CMD bash control.sh start; jackie

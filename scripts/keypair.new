@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+# cd $(dirname $(realpath $0))
+
+dir=$(mktemp -du)
+xchain-cli account newkeys -o $dir >/dev/null
+cat<<EOF
+pubkey: '$(cat $dir/public.key)'
+privkey: '$(cat $dir/private.key)'
+address: '$(cat $dir/address)'
+EOF
+rm -r $dir
