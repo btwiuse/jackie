@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+# cd $(dirname $(realpath $0))
+
+id="${1}"
+
+xchain-cli tx query "${id}"

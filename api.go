@@ -71,9 +71,29 @@ func (t *ApiV1XuperAdminBalance) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+type ApiV1XuperQueryTx struct {
+	Transaction string `uri:"id" binding:"required" json:"id" default:"45abf461aa69fe0135b97a791d5b402da952bcf8f31a63babcb01b7242d130cd"`
+}
+
+type ApiV1XuperQueryTxResponse struct{}
+
+func (t *ApiV1XuperQueryTx) Handler(c *gin.Context) {
+	var resp string
+
+	cmd := exec.Command("query.tx", t.Transaction)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	resp = strings.TrimSpace(string(out))
+
+	c.String(http.StatusOK, resp)
+}
+
 type ApiV1XuperFaucet struct {
 	Address string `uri:"address" binding:"required" json:"address" default:"0"`
-	Amount string `query:"amount" json:"amount" default:"1000"`
+	Amount  string `query:"amount" json:"amount" default:"1000"`
 }
 
 type ApiV1XuperFaucetResponse struct {

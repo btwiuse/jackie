@@ -87,6 +87,15 @@ var (
 			},
 		}),
 	)
+	apiV1XuperQueryTx = router.New(
+		&ApiV1XuperQueryTx{},
+		router.Summary("Xuper Query Transaction"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperQueryTxResponse{},
+			},
+		}),
+	)
 	apiV1XuperFaucet = router.New(
 		&ApiV1XuperFaucet{},
 		router.Summary("Xuper Faucet"),

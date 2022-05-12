@@ -44,6 +44,7 @@ func main() {
 	apiV1XuperGroup.GET("/balance", apiV1XuperAdminBalance)
 	apiV1XuperGroup.GET("/balance/:address", apiV1XuperBalance)
 	apiV1XuperGroup.POST("/faucet/:address", apiV1XuperFaucet)
+	apiV1XuperGroup.GET("/query/tx/:id", apiV1XuperQueryTx)
 
 	/*
 		You can use default Gin engin:
