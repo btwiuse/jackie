@@ -18,7 +18,7 @@ FROM ethereum/solc:stable AS solc
 FROM btwiuse/xuper
 WORKDIR /home/xchain
 RUN apt update
-RUN apt install -y build-essential vim jq
+RUN apt install -y build-essential vim jq pwgen
 COPY --from=builder /home/xchain/output /usr/local/bin
 COPY --from=builder /home/xchain/scripts /usr/local/bin
 COPY --from=builder /home/xchain/template template
