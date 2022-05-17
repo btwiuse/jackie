@@ -13,7 +13,7 @@ dir=$(mktemp -d)
 template="${1:-Empty}"
 cname="$2"
 method="$3"
-args="$4"
+args="${4}"
 
 ABI=$PWD/template/$template.abi
 

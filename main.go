@@ -49,6 +49,9 @@ func main() {
 		apiV1XuperGroup.POST("/contract/deploy", apiV1XuperContractDeploy)
 		apiV1XuperGroup.POST("/contract/invoke", apiV1XuperContractInvoke)
 		apiV1XuperGroup.POST("/contract/query", apiV1XuperContractQuery)
+		// apiV1XuperGroup.GET("/template/:name/sol", apiV1XuperTemplateSol)
+		// apiV1XuperGroup.GET("/template/:name/abi", apiV1XuperTemplateAbi)
+		// apiV1XuperGroup.GET("/template/:name/bin", apiV1XuperTemplateBin)
 	}
 
 	apiV1Group := app.Group("/api/v1", swagin.Tags("JackieChainV1"))

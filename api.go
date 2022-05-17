@@ -159,11 +159,14 @@ type ApiV1XuperContractQueryResponse struct{}
 func (t *ApiV1XuperContractQuery) Handler(c *gin.Context) {
 	var resp string
 
-	cmd := exec.Command("contract.query", t.Template, t.Contract, t.Method, t.Args)
+	/*
+	fmt.Println("contract.query")
 	fmt.Println(t.Template)
 	fmt.Println(t.Contract)
 	fmt.Println(t.Method)
 	fmt.Println(t.Args)
+	*/
+	cmd := exec.Command("contract.query", t.Template, t.Contract, t.Method, t.Args)
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
@@ -198,12 +201,14 @@ func (t *ApiV1XuperContractInvoke) Handler(c *gin.Context) {
 	}
 	keypair := string(jb)
 
+	/*
 	fmt.Println("contract.invoke")
 	fmt.Println(keypair)
 	fmt.Println(t.Template)
 	fmt.Println(t.Contract)
 	fmt.Println(t.Method)
 	fmt.Println(t.Args)
+	*/
 	cmd := exec.Command("contract.invoke", keypair, t.Template, t.Contract, t.Method, t.Args)
 	out, err := cmd.Output()
 	if err != nil {
@@ -243,11 +248,13 @@ func (t *ApiV1XuperContractDeploy) Handler(c *gin.Context) {
 	}
 	keypair := string(jb)
 
+	/*
 	fmt.Println("contract.deploy", keypair, t.Account, t.Template, t.Args)
 	fmt.Println(keypair)
 	fmt.Println(t.Account)
 	fmt.Println(t.Template)
 	fmt.Println(t.Args)
+	*/
 	cmd := exec.Command("contract.deploy", keypair, t.Account, t.Template, t.Args)
 	out, err := cmd.Output()
 	if err != nil {

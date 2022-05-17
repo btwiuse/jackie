@@ -17,7 +17,7 @@ echo "$1" | jq -jr .address > $dir/address
 template="${2:-Empty}"
 cname="$3"
 method="$4"
-args="$5"
+args="${5}"
 
 ABI=$PWD/template/$template.abi
 
