@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+# cd $(dirname $(realpath $0))
+
+dir=$(mktemp -d)
+
+# echo dir: $dir
+# rm -r $dir
+# exit 0
+
+template="${1:-Empty}"
+cname="$2"
+method="$3"
+args="$4"
+
+ABI=$PWD/template/$template.abi
+
+# solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin --abi --overwrite >>$dir/log
+
+if ! [[ -f $ABI ]]; then
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
+fi
+
+echo ABI=$ABI >> $dir/log
+echo template=$template >> $dir/log
+echo cname=$cname >> $dir/log
+echo method=$method >> $dir/log
+echo args="$args" >> $dir/log
+# xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
+echo xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" >> $dir/log
+xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" >> $dir/log
+xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" | sed -e 's,^contract response: ,,g'
+
+# rm -r $dir

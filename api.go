@@ -146,6 +146,122 @@ func (t *ApiV1XuperHello) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, t)
 }
 
+type ApiV1XuperContractQuery struct {
+	Template string `json:"template" query:"template" default:"Empty"`
+	Contract string `json:"contract" default:"deadbeaf"`
+	// ABI      string `json:"abi" default:"{}"`
+	Method string `json:"method" default:"method"`
+	Args   string `json:"args" default:"{}"`
+}
+
+type ApiV1XuperContractQueryResponse struct{}
+
+func (t *ApiV1XuperContractQuery) Handler(c *gin.Context) {
+	var resp string
+
+	cmd := exec.Command("contract.query", t.Template, t.Contract, t.Method, t.Args)
+	fmt.Println(t.Template)
+	fmt.Println(t.Contract)
+	fmt.Println(t.Method)
+	fmt.Println(t.Args)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	resp = strings.TrimSpace(string(out))
+
+	c.String(http.StatusOK, resp)
+}
+
+type ApiV1XuperContractInvoke struct {
+	Address  string `json:"address" default:"iHXRXwahx4yf6CwYyDQGvJYj4o39Jdgrs"`
+	Pubkey   string `json:"privkey" default:"{...}"`
+	Privkey  string `json:"pubkey" default:"{...}"`
+	Template string `json:"template" query:"template" default:"Empty"`
+	Contract string `json:"contract" default:"deadbeaf"`
+	// ABI      string `json:"abi" default:"{}"`
+	Method string `json:"method" default:"method"`
+	Args   string `json:"args" default:"{}"`
+}
+
+type ApiV1XuperContractInvokeResponse struct {
+	Transaction string `json:"tx" default:"cb057a9dce7f8a1d928c46ceb84e8765fab43a5ecf85bf061c59bbbc2e717932"`
+}
+
+func (t *ApiV1XuperContractInvoke) Handler(c *gin.Context) {
+	var resp ApiV1XuperContractInvokeResponse
+
+	jb, err := json.Marshal(t)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+	keypair := string(jb)
+
+	fmt.Println("contract.invoke")
+	fmt.Println(keypair)
+	fmt.Println(t.Template)
+	fmt.Println(t.Contract)
+	fmt.Println(t.Method)
+	fmt.Println(t.Args)
+	cmd := exec.Command("contract.invoke", keypair, t.Template, t.Contract, t.Method, t.Args)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	err = yaml.Unmarshal(out, &resp)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+type ApiV1XuperContractDeploy struct {
+	Address  string `json:"address" default:"iHXRXwahx4yf6CwYyDQGvJYj4o39Jdgrs"`
+	Pubkey   string `json:"privkey" default:"{...}"`
+	Privkey  string `json:"pubkey" default:"{...}"`
+	Args     string `json:"args" default:"{}"`
+	Account  string `json:"account" default:"account"`
+	Template string `json:"template" query:"template" default:"Empty"`
+}
+
+type ApiV1XuperContractDeployResponse struct {
+	Contract string `json:"contract" default:"deadbeaf"`
+	// ABI         string `json:"abi" default:"{}"`
+	Template    string `json:"template" default:"default"`
+	Transaction string `json:"tx" default:"cb057a9dce7f8a1d928c46ceb84e8765fab43a5ecf85bf061c59bbbc2e717932"`
+}
+
+func (t *ApiV1XuperContractDeploy) Handler(c *gin.Context) {
+	var resp ApiV1XuperContractDeployResponse
+
+	jb, err := json.Marshal(t)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+	keypair := string(jb)
+
+	fmt.Println("contract.deploy", keypair, t.Account, t.Template, t.Args)
+	fmt.Println(keypair)
+	fmt.Println(t.Account)
+	fmt.Println(t.Template)
+	fmt.Println(t.Args)
+	cmd := exec.Command("contract.deploy", keypair, t.Account, t.Template, t.Args)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	err = yaml.Unmarshal(out, &resp)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
 type ApiV1XuperAccountNew struct {
 	Address string `json:"address" default:"iHXRXwahx4yf6CwYyDQGvJYj4o39Jdgrs"`
 	Pubkey  string `json:"privkey" default:"{...}"`

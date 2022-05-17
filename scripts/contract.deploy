@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+# cd $(dirname $(realpath $0))
+
+dir=$(mktemp -d)
+
+echo "$1" | jq -jr .pubkey > $dir/public.key
+echo "$1" | jq -jr .privkey > $dir/private.key
+echo "$1" | jq -jr .address > $dir/address
+
+# echo dir: $dir
+# rm -r $dir
+# exit 0
+
+cname=$(pwgen -N1 -n 12)
+
+account="$2"
+template="${3:-Empty}"
+args="${4:-'{}'}"
+
+BIN=$PWD/template/$template.bin
+ABI=$PWD/template/$template.abi
+
+# solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin --abi --overwrite >>$dir/log
+
+if ! [[ -f $ABI ]]; then
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
+fi
+
+if ! [[ -f $BIN ]]; then
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin >>$dir/log
+fi
+
+echo $BIN >> $dir/log
+echo $ABI >> $dir/log
+echo $account >> $dir/log
+echo $template >> $dir/log
+echo $args  >> $dir/log
+# xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
+echo xchain-cli --keys $dir evm deploy --account $account --cname $cname --fee 20000 $BIN --abi $ABI >> $dir/log
+xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname $cname --fee 20000 $BIN --abi $ABI >> $dir/log
+
+cat<<EOF
+contract: "$cname"
+template: $template
+tx: "$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
+EOF
+
+# rm -r $dir

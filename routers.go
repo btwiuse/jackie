@@ -132,4 +132,31 @@ var (
 			},
 		}),
 	)
+	apiV1XuperContractDeploy = router.New(
+		&ApiV1XuperContractDeploy{},
+		router.Summary("New Contract Deploy"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperContractDeployResponse{},
+			},
+		}),
+	)
+	apiV1XuperContractQuery = router.New(
+		&ApiV1XuperContractQuery{},
+		router.Summary("New Contract Query"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperContractQueryResponse{},
+			},
+		}),
+	)
+	apiV1XuperContractInvoke = router.New(
+		&ApiV1XuperContractInvoke{},
+		router.Summary("New Contract Invoke"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperContractInvokeResponse{},
+			},
+		}),
+	)
 )

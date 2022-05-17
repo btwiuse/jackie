@@ -46,9 +46,9 @@ func main() {
 		apiV1XuperGroup.GET("/balance/:address", apiV1XuperBalance)
 		apiV1XuperGroup.POST("/faucet/:address", apiV1XuperFaucet)
 		apiV1XuperGroup.GET("/transaction/:id", apiV1XuperQueryTx)
-		apiV1XuperGroup.POST("/contract/deploy", apiV1XuperHello)
-		apiV1XuperGroup.POST("/contract/invoke", apiV1XuperHello)
-		apiV1XuperGroup.GET("/contract/query", apiV1XuperHello)
+		apiV1XuperGroup.POST("/contract/deploy", apiV1XuperContractDeploy)
+		apiV1XuperGroup.POST("/contract/invoke", apiV1XuperContractInvoke)
+		apiV1XuperGroup.POST("/contract/query", apiV1XuperContractQuery)
 	}
 
 	apiV1Group := app.Group("/api/v1", swagin.Tags("JackieChainV1"))
@@ -59,9 +59,9 @@ func main() {
 		apiV1Group.GET("/:chain/balance/:address", apiV1XuperBalance)
 		apiV1Group.POST("/:chain/faucet/:address", apiV1XuperFaucet)
 		apiV1Group.GET("/:chain/transaction/:id", apiV1XuperQueryTx)
-		apiV1Group.POST("/:chain/contract/deploy", apiV1XuperHello)
-		apiV1Group.POST("/:chain/contract/invoke", apiV1XuperHello)
-		apiV1Group.GET("/:chain/contract/query", apiV1XuperHello)
+		apiV1Group.POST("/:chain/contract/deploy", apiV1XuperContractDeploy)
+		apiV1Group.POST("/:chain/contract/invoke", apiV1XuperContractInvoke)
+		apiV1Group.POST("/:chain/contract/query", apiV1XuperContractQuery)
 	}
 	/*
 		You can use default Gin engin:

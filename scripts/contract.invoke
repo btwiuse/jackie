@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+# cd $(dirname $(realpath $0))
+
+dir=$(mktemp -d)
+
+echo "$1" | jq -jr .pubkey > $dir/public.key
+echo "$1" | jq -jr .privkey > $dir/private.key
+echo "$1" | jq -jr .address > $dir/address
+
+# echo dir: $dir
+# rm -r $dir
+# exit 0
+
+template="${2:-Empty}"
+cname="$3"
+method="$4"
+args="$5"
+
+ABI=$PWD/template/$template.abi
+
+if ! [[ -f $ABI ]]; then
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
+fi
+
+echo $ABI >> $dir/log
+echo template=$template >> $dir/log
+echo cname=$cname >> $dir/log
+echo method=$method >> $dir/log
+echo args="$args" >> $dir/log
+# xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
+
+echo xchain-cli --keys $dir evm invoke --method "$method" -a "$args" "$cname" --abi "$ABI" --fee 100 >> $dir/log
+xchain-cli --keys $dir evm invoke --method "$method" -a "$args" "$cname" --abi "$ABI" --fee 100 >> $dir/log
+# xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" | sed -e 's,^contract response: ,,g'
+
+cat<<EOF
+contract: "$cname"
+template: $template
+tx: "$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
+EOF
+
+# rm -r $dir
