@@ -159,4 +159,22 @@ var (
 			},
 		}),
 	)
+	apiV1XuperAddrconvX2e = router.New(
+		&ApiV1XuperAddrconvX2e{},
+		router.Summary("Xuper Addrconv Xuper to Evm"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperAddrconvResponse{},
+			},
+		}),
+	)
+	apiV1XuperAddrconvE2x = router.New(
+		&ApiV1XuperAddrconvE2x{},
+		router.Summary("Xuper Addrconv Evm to Address"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperAddrconvResponse{},
+			},
+		}),
+	)
 )

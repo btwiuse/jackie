@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+conv(){
+  xchain-cli evm addr-trans -t $1 -f $2 | while read _ result type; do
+    cat <<EOF
+{
+  "type": "$type",
+  "result": "$result"
+}
+EOF
+  done
+}
+
+conv "$@"

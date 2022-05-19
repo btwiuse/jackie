@@ -115,6 +115,53 @@ func (t *ApiV1XuperFaucet) Handler(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+type ApiV1XuperAddrconvX2e struct {
+	Address string `uri:"address" binding:"required" json:"address" default:"0"`
+}
+
+type ApiV1XuperAddrconvResponse struct {
+	Type   string `json:"type" default:""`
+	Result string `json:"result" default:""`
+}
+
+func (t *ApiV1XuperAddrconvX2e) Handler(c *gin.Context) {
+	var resp ApiV1XuperAddrconvResponse
+
+	cmd := exec.Command("addrconv", "x2e", t.Address)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	err = yaml.Unmarshal(out, &resp)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+type ApiV1XuperAddrconvE2x struct {
+	Address string `uri:"address" binding:"required" json:"address" default:"0"`
+}
+
+func (t *ApiV1XuperAddrconvE2x) Handler(c *gin.Context) {
+	var resp ApiV1XuperAddrconvResponse
+
+	cmd := exec.Command("addrconv", "e2x", t.Address)
+	out, err := cmd.Output()
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	err = yaml.Unmarshal(out, &resp)
+	if err != nil {
+		c.String(http.StatusInternalServerError, err.Error())
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
 type ApiV1XuperBalance struct {
 	Address string `uri:"address" binding:"required" json:"address" default:"0"`
 }
@@ -160,11 +207,11 @@ func (t *ApiV1XuperContractQuery) Handler(c *gin.Context) {
 	var resp string
 
 	/*
-	fmt.Println("contract.query")
-	fmt.Println(t.Template)
-	fmt.Println(t.Contract)
-	fmt.Println(t.Method)
-	fmt.Println(t.Args)
+		fmt.Println("contract.query")
+		fmt.Println(t.Template)
+		fmt.Println(t.Contract)
+		fmt.Println(t.Method)
+		fmt.Println(t.Args)
 	*/
 	cmd := exec.Command("contract.query", t.Template, t.Contract, t.Method, t.Args)
 	out, err := cmd.Output()
@@ -202,12 +249,12 @@ func (t *ApiV1XuperContractInvoke) Handler(c *gin.Context) {
 	keypair := string(jb)
 
 	/*
-	fmt.Println("contract.invoke")
-	fmt.Println(keypair)
-	fmt.Println(t.Template)
-	fmt.Println(t.Contract)
-	fmt.Println(t.Method)
-	fmt.Println(t.Args)
+		fmt.Println("contract.invoke")
+		fmt.Println(keypair)
+		fmt.Println(t.Template)
+		fmt.Println(t.Contract)
+		fmt.Println(t.Method)
+		fmt.Println(t.Args)
 	*/
 	cmd := exec.Command("contract.invoke", keypair, t.Template, t.Contract, t.Method, t.Args)
 	out, err := cmd.Output()
@@ -249,11 +296,11 @@ func (t *ApiV1XuperContractDeploy) Handler(c *gin.Context) {
 	keypair := string(jb)
 
 	/*
-	fmt.Println("contract.deploy", keypair, t.Account, t.Template, t.Args)
-	fmt.Println(keypair)
-	fmt.Println(t.Account)
-	fmt.Println(t.Template)
-	fmt.Println(t.Args)
+		fmt.Println("contract.deploy", keypair, t.Account, t.Template, t.Args)
+		fmt.Println(keypair)
+		fmt.Println(t.Account)
+		fmt.Println(t.Template)
+		fmt.Println(t.Args)
 	*/
 	cmd := exec.Command("contract.deploy", keypair, t.Account, t.Template, t.Args)
 	out, err := cmd.Output()
