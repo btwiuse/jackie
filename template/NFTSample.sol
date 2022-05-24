@@ -3,8 +3,10 @@ pragma solidity ^0.8.0;
 
 //imports a specific Solidity contract from the Open Zeppelin Github repository; 
 //check the latest version # and update it in the import statement's path as needed
-/* import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.3.0/contracts/token/ERC1155/ERC1155.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.3.0/contracts/access/Ownable.sol"; */
+/* 
+  import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.3.0/contracts/token/ERC1155/ERC1155.sol";
+  import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.3.0/contracts/access/Ownable.sol";
+ */
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -19,10 +21,25 @@ contract NFTSample is ERC1155, Ownable {
     //an address mapped to 'false' will be blocked from being sent tokens
     mapping(address => bool) internal allowedAddresses;
 
-    
-    constructor () ERC1155("https://example.cdn/com/{id}.json") 
+    //作品集名称
+    string public name;
+
+    //作品集描述
+    string public description;
+
+    constructor (string memory contract_name, string memory contract_description, string memory contract_uri) ERC1155(contract_uri) 
     {
-    
+        name = contract_name;
+        description = contract_description;
+        setURI(contract_uri);
+    }
+
+    /*
+    used to change metadata, only owner access
+    https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-a-factory-erc-1155-contract-on-polygon-using-truffle
+    */
+    function setURI(string memory newuri) public onlyOwner {
+        _setURI(newuri);
     }
     
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) public onlyOwner {
