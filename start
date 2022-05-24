@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 
 bash control.sh start
-xchain-cli status
+
+until xchain-cli status; do
+	sleep 1
+done
