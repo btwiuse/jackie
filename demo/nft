@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+keypair=demo/k1
+template=NFTSample
+args=demo/lxqj.json
+
+echo "创建新 keypair 并保存至 $keypair 目录"
+keypair.new $keypair
+address=$(cat $keypair/address)
+address_evm=$(addrconv x2e $address | jq -r .result)
+
+cat $args | jq ".contract_owner=\"$address_evm\"" | sponge $args
+
+echo "keypair 的 address 为 $address, 转换为 evm 为 $address_evm"
+
+echo "向 $keypair 转账 1000000"
+transfer.to $keypair 1000000
+
+echo "用 $keypair 创建合约 account"
+account="$(account.new $keypair | yj | jq -r .account)"
+
+echo "向 $account 转账 1000000"
+transfer.to $account 1000000
+
+# 等待 3 秒
+sleep 3.5
+
+echo "$keypair 用 $account 部署 $template 模板合约"
+contract="$(contract.deploy $keypair $account $template $args | yj | jq -r .contract)"
+
+echo "合约 $contract 的 evm 等效地址"
+addrconv x2e $contract
+
+echo "查询合约 $contract 的 owner"
+owner=$(contract.query $template $contract owner '{}' | jq -r '.[0]["0"]')
+
+echo "$owner 转换为 xchain 账户即为"
+addrconv e2x $owner
+
+echo "查询合约 $contract 的 name"
+contract.query $template $contract name '{}' | jq -r '.[0]["0"]'
+
+echo "查询合约 $contract 的 description"
+contract.query $template $contract description '{}' | jq -r '.[0]["0"]'
+
+echo "查询合约 $contract 的 txorigin"
+contract.query $template $contract txorigin '{}' | jq -r '.[0]["0"]'
+
+echo "查询合约 $contract 的 msgsender"
+contract.query $template $contract msgsender '{}' | jq -r '.[0]["0"]'
+
+echo "查询合约 $contract 的 uri(0)"
+contract.query $template $contract uri '{"":"0"}' | jq -r '.[0]["0"]'
+
+x(){
+echo "调用合约 $contract 的 mint(...) 方法"
+contract.invoke $keypair $template $contract mint "$(cat <<EOF | yj
+to: $(addrconv x2e $address | jq -r .result)
+id: 0
+amount: 4
+data: "0x00"
+EOF
+)"
+}
+sleep 3
+x

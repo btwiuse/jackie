@@ -1,0 +1,20 @@
+/home/aaron/jackie/template/NFTSample.abi
+template=NFTSample
+cname=shoo5eedohZe
+method=mint
+args={
+  "to": "620651519B5AB661B634161A3C21049B23A67AA6",
+  "id": 0,
+  "amount": 4,
+  "data": "0x00"
+}
+xchain-cli --keys demo/k1 evm invoke --method mint -a {
+  "to": "620651519B5AB661B634161A3C21049B23A67AA6",
+  "id": 0,
+  "amount": 4,
+  "data": "0x00"
+} shoo5eedohZe --abi /home/aaron/jackie/template/NFTSample.abi --fee 1000
+contract response: []
+The gas you cousume is: 290
+The fee you pay is: 1000
+Tx id: 5146a59b78fefebd076b40cabc11c5f98b8fd7e2c0939bf8d28b96bb618efd0c

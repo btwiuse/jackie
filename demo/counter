@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -ueo pipefail
+
+keypair=demo/k1
+template=Counter
+args="{}"
+
+echo "创建新 keypair 并保存至 $keypair 目录"
+keypair.new $keypair
+
+echo "向 $keypair 转账 1000000"
+transfer.to $keypair 1000000
+
+echo "用 $keypair 创建合约 account"
+account="$(account.new $keypair | yj | jq -r .account)"
+
+echo "向 $account 转账 1000000"
+transfer.to $account 1000000
+
+# 等待 3 秒
+sleep 3.5
+
+echo "$keypair 用 $account 部署 $template 模板合约"
+contract="$(contract.deploy $keypair $account $template $args | yj | jq -r .contract)"
+
+echo "合约 $contract 的 evm 等效地址"
+addrconv x2e $contract
+
+echo "查询合约 $contract 的 getOwner()"
+owner=$(contract.query $template $contract getOwner '{}' | jq -r '.[0]["0"]')
+
+echo "$owner 转换为合约账户即为"
+addrconv e2x $owner
+
+echo "调用合约 $contract 的 increase('stone') 方法"
+contract.invoke $keypair $template $contract increase '{"key":"stone"}'
+
+echo "查询合约 $contract 的 get('stone')"
+contract.query $template $contract get '{"key":"stone"}' | jq -r '.[0]["0"]'
+
+exit
+
+echo "查询合约 $contract 的 name"
+contract.query $template $contract name '{}' | jq -r '.[0]["0"]'
+
+echo "查询合约 $contract 的 description"
+contract.query $template $contract description '{}' | jq -r '.[0]["0"]'
