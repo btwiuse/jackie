@@ -46,7 +46,11 @@ contract NFTSample is ERC1155, Ownable {
     https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-a-factory-erc-1155-contract-on-polygon-using-truffle
     */
     function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
+        super._setURI(newuri);
+    }
+
+    function mint(address to, uint256 id, uint256 amount, bytes memory data) public onlyOwner {
+        super._mint(to, id, amount, data);
     }
     
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) public onlyOwner {
