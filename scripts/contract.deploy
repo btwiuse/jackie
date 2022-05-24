@@ -39,8 +39,8 @@ echo $account >> $dir/log
 echo $template >> $dir/log
 echo "$args" >> $dir/log
 # xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
-echo xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname $cname --fee 20000 $BIN --abi $ABI >> $dir/log
-xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname "$cname" --fee 20000 $BIN --abi $ABI >> $dir/log
+echo xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname $cname --fee 22000 $BIN --abi $ABI >> $dir/log
+xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname "$cname" --fee 22000 $BIN --abi $ABI >> $dir/log
 
 cat<<EOF
 contract: "$cname"
