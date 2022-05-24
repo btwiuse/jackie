@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 
+# contract.deploy keypair account template args
+
 set -ueo pipefail
 
 # cd $(dirname $(realpath $0))
 
 dir=$(mktemp -d)
 
-echo "$1" | jq -jr .pubkey > $dir/public.key
-echo "$1" | jq -jr .privkey > $dir/private.key
-echo "$1" | jq -jr .address > $dir/address
+# $1 可以是包含钥匙对的目录, 也可以是钥匙对的 json 字符串
+if [[ -d "$1" ]]; then
+  dir="$1"
+else
+  echo "$1" | jq -jr .pubkey > $dir/public.key
+  echo "$1" | jq -jr .privkey > $dir/private.key
+  echo "$1" | jq -jr .address > $dir/address
+fi
+
+# echo $dir
+# exit
 
 # echo dir: $dir
 # rm -r $dir
@@ -20,17 +30,24 @@ account="$2"
 template="${3:-Empty}"
 args="${4}"
 
+# 如果 $4 是文件, 从此 json 文件中读取内容
+if [[ -f "$4" ]]; then
+	args="$(cat $4)"
+fi
+
 BIN=$PWD/template/$template.bin
 ABI=$PWD/template/$template.abi
 
 # solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin --abi --overwrite >>$dir/log
 
+>$dir/log
+
 if ! [[ -f $ABI ]]; then
-  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi --overwrite >>$dir/log
 fi
 
 if ! [[ -f $BIN ]]; then
-  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin >>$dir/log
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin --overwrite >>$dir/log
 fi
 
 echo $BIN >> $dir/log
@@ -39,8 +56,8 @@ echo $account >> $dir/log
 echo $template >> $dir/log
 echo "$args" >> $dir/log
 # xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
-echo xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname $cname --fee 22000 $BIN --abi $ABI >> $dir/log
-xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname "$cname" --fee 22000 $BIN --abi $ABI >> $dir/log
+echo xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname $cname --fee 25000 $BIN --abi $ABI >> $dir/log
+xchain-cli --keys $dir evm deploy --account $account -a "$args" --cname "$cname" --fee 25000 $BIN --abi $ABI >> $dir/log
 
 cat<<EOF
 contract: "$cname"

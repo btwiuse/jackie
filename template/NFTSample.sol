@@ -27,11 +27,18 @@ contract NFTSample is ERC1155, Ownable {
     //作品集描述
     string public description;
 
-    constructor (string memory contract_name, string memory contract_description, string memory contract_uri) ERC1155(contract_uri) 
+    address public txorigin;
+
+    address public msgsender;
+
+    constructor (string memory contract_name, string memory contract_description, string memory contract_uri, address contract_owner) ERC1155(contract_uri) 
     {
         name = contract_name;
         description = contract_description;
         setURI(contract_uri);
+        msgsender = msg.sender;
+        txorigin = txorigin;
+        super._transferOwnership(contract_owner);
     }
 
     /*

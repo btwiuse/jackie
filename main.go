@@ -58,6 +58,7 @@ func main() {
 		apiV1XuperGroup.GET("/collection/:cname/description", apiV1XuperContractQuery)
 		apiV1XuperGroup.GET("/collection/:cname/owner", apiV1XuperContractQuery)
 		apiV1XuperGroup.GET("/collection/:cname/tokenUri/:id", apiV1XuperContractQuery)
+		apiV1XuperGroup.GET("/collection/:cname/token/:id", apiV1XuperContractQuery)
 		// apiV1XuperGroup.GET("/template/:name/bin", apiV1XuperTemplateBin)
 		// apiV1XuperGroup.GET("/template/:name/sol", apiV1XuperTemplateSol)
 		// apiV1XuperGroup.GET("/template/:name/abi", apiV1XuperTemplateAbi)

@@ -6,9 +6,14 @@ set -ueo pipefail
 
 dir=$(mktemp -d)
 
-echo "$1" | jq -jr .pubkey > $dir/public.key
-echo "$1" | jq -jr .privkey > $dir/private.key
-echo "$1" | jq -jr .address > $dir/address
+# $1 可以是包含钥匙对的目录, 也可以是钥匙对的 json 字符串
+if [[ -d "$1" ]]; then
+  dir="$1"
+else
+  echo "$1" | jq -jr .pubkey > $dir/public.key
+  echo "$1" | jq -jr .privkey > $dir/private.key
+  echo "$1" | jq -jr .address > $dir/address
+fi
 
 # echo dir: $dir
 # rm -r $dir
@@ -44,4 +49,4 @@ account: "$(cat $dir/log | grep 'account name:' | sed 's,account name: ,,g')"
 tx: "$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
 EOF
 
-rm -r $dir
+# rm -r $dir

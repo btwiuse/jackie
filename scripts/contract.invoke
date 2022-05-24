@@ -6,9 +6,14 @@ set -ueo pipefail
 
 dir=$(mktemp -d)
 
-echo "$1" | jq -jr .pubkey > $dir/public.key
-echo "$1" | jq -jr .privkey > $dir/private.key
-echo "$1" | jq -jr .address > $dir/address
+# $1 可以是包含钥匙对的目录, 也可以是钥匙对的 json 字符串
+if [[ -d "$1" ]]; then
+  dir="$1"
+else
+  echo "$1" | jq -jr .pubkey > $dir/public.key
+  echo "$1" | jq -jr .privkey > $dir/private.key
+  echo "$1" | jq -jr .address > $dir/address
+fi
 
 # echo dir: $dir
 # rm -r $dir
@@ -21,6 +26,7 @@ args="${5}"
 
 ABI=$PWD/template/$template.abi
 
+>$dir/log
 if ! [[ -f $ABI ]]; then
   solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
 fi

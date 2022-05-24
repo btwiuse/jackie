@@ -17,6 +17,7 @@ args="${4}"
 
 ABI=$PWD/template/$template.abi
 
+>$dir/log
 # solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin --abi --overwrite >>$dir/log
 
 if ! [[ -f $ABI ]]; then

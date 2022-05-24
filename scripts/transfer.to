@@ -4,7 +4,14 @@ set -eo pipefail
 
 # cd $(dirname $(realpath $0))
 
+# 默认 arg0 为地址
 addr="${1}"
+
+# 如果 arg0 为目录, 则从 arg0/address 中读取地址
+if [[ -d "$1" ]]; then
+  addr="$(cat $1/address)"
+fi
+
 amount="${2:-1000}"
 
 if ! [[ -n "${addr}" ]]; then

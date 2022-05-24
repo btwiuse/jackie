@@ -11,4 +11,10 @@ pubkey: '$(cat $dir/public.key)'
 privkey: '$(cat $dir/private.key)'
 address: '$(cat $dir/address)'
 EOF
+
+if [[ -n "$1" ]]; then
+	mkdir -p "$1"
+	mv $dir/{address,public.key,private.key} "$1"
+fi
+
 rm -r $dir
