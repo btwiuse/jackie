@@ -17,7 +17,7 @@ Jack of all trades, master of some.
     $ docker run -it -v $PWD/conf:/home/xuper/conf -v $PWD/data:/home/xuper/data -p 8085:8085 -p 37101:37101 btwiuse/jackie
     ```
 
-    after that you should able to run ./demo/counter and ./demo/nft to verify it's really working
+    after that you should able to run ./demo/counter and ./demo/nft to verify it's really working. You may have to install [yj](https://github.com/sclevine/yj/releases/tag/v5.1.0) and jq first in order to run those scripts.
 
 - using `go run`
 
