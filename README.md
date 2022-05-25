@@ -14,8 +14,10 @@ Jack of all trades, master of some.
 - using `docker`
 
     ```
-    $ docker run -it -p 8085:8085 btwiuse/jackie
+    $ docker run -it -v $PWD/conf:/home/xuper/conf -v $PWD/data:/home/xuper/data -p 8085:8085 -p 37101:37101 btwiuse/jackie
     ```
+
+    after that you should able to run ./demo/counter and ./demo/nft to verify it's really working
 
 - using `go run`
 
