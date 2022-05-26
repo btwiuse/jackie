@@ -84,14 +84,16 @@ type ErrorResponse struct {
 }
 
 func (t *ApiV1XuperQueryTx) Handler(c *gin.Context) {
-	var output string
-
-	cmd := exec.Command("query.tx", t.Transaction)
-	out, err := cmd.CombinedOutput()
-	output = strings.TrimSpace(string(out))
+	var (
+		prog     = "query.tx"
+		args     = []string{t.Transaction}
+		cmd      = exec.Command(prog, args...)
+		out, err = cmd.CombinedOutput()
+		output   = strings.TrimSpace(string(out))
+	)
 
 	if err != nil {
-		log.Println(err, output)
+		log.Println(prog, args, err, output)
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: output})
 		return
 	}
@@ -334,24 +336,35 @@ type ApiV1XuperAccountNewResponse struct {
 	Transaction string `json:"tx" default:"cb057a9dce7f8a1d928c46ceb84e8765fab43a5ecf85bf061c59bbbc2e717932"`
 }
 
+func jsonMarshalString(v interface{}) (string, error) {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
+
 func (t *ApiV1XuperAccountNew) Handler(c *gin.Context) {
 	var resp ApiV1XuperAccountNewResponse
+	var (
+		prog       = "account.new"
+		keypair, _ = jsonMarshalString(t)
+		args       = []string{keypair}
+		cmd        = exec.Command(prog, args...)
+		out, err   = cmd.CombinedOutput()
+		output     = strings.TrimSpace(string(out))
+	)
 
-	jb, err := json.Marshal(t)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-	}
-	keypair := string(jb)
-
-	cmd := exec.Command("account.new", keypair)
-	out, err := cmd.Output()
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		log.Println(prog, args, err, output)
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: output})
+		return
 	}
 
 	err = yaml.Unmarshal(out, &resp)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		log.Println("yaml.Unmarshal", err, out)
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
 	}
 
 	c.JSON(http.StatusOK, resp)

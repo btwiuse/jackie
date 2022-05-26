@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ueo pipefail
+set -uo pipefail
 
 # cd $(dirname $(realpath $0))
 
@@ -43,6 +43,11 @@ rand(){
 account="$(rand)"
 
 xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
+exit_code=$?
+if [[ $exit_code -ne 0 ]]; then
+	cat $dir/log | tail -n3
+	exit $exit_code
+fi
 
 cat<<EOF
 account: "$(cat $dir/log | grep 'account name:' | sed 's,account name: ,,g')"
