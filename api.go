@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"os/exec"
@@ -78,18 +79,24 @@ type ApiV1XuperQueryTx struct {
 
 type ApiV1XuperQueryTxResponse struct{}
 
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
 func (t *ApiV1XuperQueryTx) Handler(c *gin.Context) {
-	var resp string
+	var output string
 
 	cmd := exec.Command("query.tx", t.Transaction)
-	out, err := cmd.Output()
+	out, err := cmd.CombinedOutput()
+	output = strings.TrimSpace(string(out))
+
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		log.Println(err, output)
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: output})
+		return
 	}
 
-	resp = strings.TrimSpace(string(out))
-
-	c.String(http.StatusOK, resp)
+	c.String(http.StatusOK, output)
 }
 
 type ApiV1XuperFaucet struct {
