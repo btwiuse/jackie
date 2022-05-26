@@ -66,6 +66,7 @@ func (t *ApiV1XuperAdminBalance) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	resp = ApiV1XuperBalanceResponse{Balance: strings.TrimSpace(string(out))}
@@ -117,6 +118,7 @@ func (t *ApiV1XuperFaucet) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	resp = ApiV1XuperFaucetResponse{Transaction: strings.TrimSpace(string(out))}
@@ -140,11 +142,13 @@ func (t *ApiV1XuperAddrconvX2e) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	err = yaml.Unmarshal(out, &resp)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, resp)
@@ -161,11 +165,13 @@ func (t *ApiV1XuperAddrconvE2x) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	err = yaml.Unmarshal(out, &resp)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, resp)
@@ -186,6 +192,7 @@ func (t *ApiV1XuperBalance) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	resp = ApiV1XuperBalanceResponse{Balance: strings.TrimSpace(string(out))}
@@ -226,6 +233,7 @@ func (t *ApiV1XuperContractQuery) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	resp = strings.TrimSpace(string(out))
@@ -251,11 +259,7 @@ type ApiV1XuperContractInvokeResponse struct {
 func (t *ApiV1XuperContractInvoke) Handler(c *gin.Context) {
 	var resp ApiV1XuperContractInvokeResponse
 
-	jb, err := json.Marshal(t)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-	}
-	keypair := string(jb)
+	keypair, _ := jsonMarshalString(t)
 
 	/*
 		fmt.Println("contract.invoke")
@@ -269,11 +273,13 @@ func (t *ApiV1XuperContractInvoke) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	err = yaml.Unmarshal(out, &resp)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, resp)
@@ -298,11 +304,7 @@ type ApiV1XuperContractDeployResponse struct {
 func (t *ApiV1XuperContractDeploy) Handler(c *gin.Context) {
 	var resp ApiV1XuperContractDeployResponse
 
-	jb, err := json.Marshal(t)
-	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
-	}
-	keypair := string(jb)
+	keypair, _ := jsonMarshalString(t)
 
 	/*
 		fmt.Println("contract.deploy", keypair, t.Account, t.Template, t.Args)
@@ -315,11 +317,13 @@ func (t *ApiV1XuperContractDeploy) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	err = yaml.Unmarshal(out, &resp)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, resp)
@@ -361,10 +365,10 @@ func (t *ApiV1XuperAccountNew) Handler(c *gin.Context) {
 		return
 	}
 
-	err = yaml.Unmarshal(out, &resp)
-	if err != nil {
+	if err = yaml.Unmarshal(out, &resp); err != nil {
 		log.Println("yaml.Unmarshal", err, out)
 		c.JSON(http.StatusInternalServerError, ErrorResponse{Error: err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, resp)
@@ -385,11 +389,13 @@ func (t *ApiV1XuperKeypairNew) Handler(c *gin.Context) {
 	out, err := cmd.Output()
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	err = yaml.Unmarshal(out, &resp)
 	if err != nil {
 		c.String(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusOK, resp)
