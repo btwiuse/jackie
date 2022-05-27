@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ueo pipefail
+set -uo pipefail
 
 # cd $(dirname $(realpath $0))
 
@@ -32,6 +32,11 @@ echo args="$args" >> $dir/log
 # xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
 echo xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" >> $dir/log
 xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" >> $dir/log
+exit_code=$?
+if [[ $exit_code -ne 0 ]]; then
+	cat $dir/log | tail -n1
+	exit $exit_code
+fi
 xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" | sed -e 's,^contract response: ,,g'
 
 # rm -r $dir

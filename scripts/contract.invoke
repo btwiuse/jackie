@@ -40,6 +40,7 @@ echo args="$args" >> $dir/log
 
 echo xchain-cli --keys $dir evm invoke --method "$method" -a "$args" "$cname" --abi "$ABI" --fee 1000 >> $dir/log
 xchain-cli --keys $dir evm invoke --method "$method" -a "$args" "$cname" --abi "$ABI" --fee 1000 >> $dir/log
+
 # xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" | sed -e 's,^contract response: ,,g'
 
 cat<<EOF

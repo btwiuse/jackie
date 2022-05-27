@@ -132,6 +132,15 @@ var (
 			},
 		}),
 	)
+	apiV1XuperCollectionNew = router.New(
+		&ApiV1XuperCollectionNew{},
+		router.Summary("New Collection"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperCollectionNewResponse{},
+			},
+		}),
+	)
 	apiV1XuperContractDeploy = router.New(
 		&ApiV1XuperContractDeploy{},
 		router.Summary("New Contract Deploy"),

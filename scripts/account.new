@@ -49,9 +49,12 @@ if [[ $exit_code -ne 0 ]]; then
 	exit $exit_code
 fi
 
+account="$(cat $dir/log | grep 'account name:' | sed 's,account name: ,,g')"
+tx="$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
 cat<<EOF
-account: "$(cat $dir/log | grep 'account name:' | sed 's,account name: ,,g')"
-tx: "$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
+account: "$account"
+tx: "$tx"
+addressEvm: '$(addrconv x2e $account | jq -r .result)'
 EOF
 
 # rm -r $dir
