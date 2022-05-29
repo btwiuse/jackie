@@ -15,7 +15,11 @@ else
   for k in pubkey privkey address; do
 	  # echo $k
 	  jq -e .$k <<< "$1" >/dev/null || {
-		echo "json object has no such key: $k"
+		echo "no such key: $k"
+		exit 1
+	  }
+	  [[ "$(jq -r .$k <<< "$1")" == "" ]] && {
+		echo "$k cannot be empty"
 		exit 1
 	  }
   done
