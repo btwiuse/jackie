@@ -141,6 +141,24 @@ var (
 			},
 		}),
 	)
+	apiV1XuperCollectionInfo = router.New(
+		&ApiV1XuperCollectionInfo{},
+		router.Summary("Collection Info"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperCollectionInfoResponse{},
+			},
+		}),
+	)
+	apiV1XuperCollectionMint = router.New(
+		&ApiV1XuperCollectionMint{},
+		router.Summary("Collection Mint"),
+		router.Responses(router.Response{
+			"200": router.ResponseItem{
+				Model: ApiV1XuperCollectionMintResponse{},
+			},
+		}),
+	)
 	apiV1XuperContractDeploy = router.New(
 		&ApiV1XuperContractDeploy{},
 		router.Summary("New Contract Deploy"),

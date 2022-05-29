@@ -6,15 +6,10 @@ set -uo pipefail
 
 # cd $(dirname $(realpath $0))
 
-dir=$(mktemp -d)
-
-# $1 可以是包含钥匙对的目录, 也可以是钥匙对的 json 字符串
-if [[ -d "$1" ]]; then
-  dir="$1"
-else
-  echo "$1" | jq -jr .pubkey > $dir/public.key
-  echo "$1" | jq -jr .privkey > $dir/private.key
-  echo "$1" | jq -jr .address > $dir/address
+dir=$(keypair.parse "$1")
+if [[ $? -ne 0 ]]; then
+  echo "$dir"
+  exit 1
 fi
 
 # echo $dir

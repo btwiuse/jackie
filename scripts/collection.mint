@@ -10,20 +10,21 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
+
 # echo dir: $dir
 # rm -r $dir
 # exit 0
 
-template="${2:-Empty}"
-cname="$3"
-method="$4"
-args="${5}"
+template="NFTSample"
+cname="$2"
+method="mint"
+args="${3}"
 
 ABI=$PWD/template/$template.abi
 
 >$dir/log
 if ! [[ -f $ABI ]]; then
-  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi --overwrite >>$dir/log
 fi
 
 echo $ABI >> $dir/log
@@ -45,7 +46,7 @@ fi
 
 cat<<EOF
 response: $(cat $dir/log | grep '^contract response:' | sed 's,contract response: ,,g')
-contract: "$cname"
+collection: "$cname"
 template: $template
 tx: "$(cat $dir/log | grep 'Tx id:' | sed 's,Tx id: ,,g')"
 EOF

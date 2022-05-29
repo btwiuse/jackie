@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -o vi
+
+function main(){
+
+dir=$(mktemp -d)
+
+if [[ -d "$1" ]]; then
+  dir="$1"
+else
+  jq . <<< "$1" >/dev/null || {
+	  exit 1
+  }
+  for k in pubkey privkey address; do
+	  # echo $k
+	  jq -e .$k <<< "$1" >/dev/null || {
+		echo "json object has no such key: $k"
+		exit 1
+	  }
+  done
+  jq -jr .pubkey <<< "$1" > $dir/public.key
+  jq -jr .privkey <<< "$1" > $dir/private.key
+  jq -jr .address <<< "$1" > $dir/address
+fi
+  echo "$dir"
+}
+
+main "$@"

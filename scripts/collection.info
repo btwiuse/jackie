@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+# cd $(dirname $(realpath $0))
+
+dir=$(mktemp -d)
+
+# echo dir: $dir
+# rm -r $dir
+# exit 0
+
+template="NFTSample"
+cname="$1"
+# method="$2"
+args="{}"
+
+ABI=$PWD/template/$template.abi
+
+>$dir/log
+# solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --bin --abi --overwrite >>$dir/log
+
+if ! [[ -f $ABI ]]; then
+  solc --base-path $PWD/template/node_modules/ template/$template.sol -o template --abi >>$dir/log
+fi
+
+echo ABI=$ABI >> $dir/log
+echo template=$template >> $dir/log
+echo cname=$cname >> $dir/log
+#echo method=$method >> $dir/log
+echo args="$args" >> $dir/log
+# xchain-cli --keys $dir account new --account $account --fee 1000 > $dir/log
+#echo xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" >> $dir/log
+#xchain-cli evm query --method "$method" -a "$args" "$cname" --abi "$ABI" >> $dir/log
+
+xchain-cli evm query --method "name" -a "$args" "$cname" --abi "$ABI" > $dir/name
+exit_code=$?
+if [[ $exit_code -ne 0 ]]; then
+	cat $dir/name
+	exit $exit_code
+fi
+name=$(cat $dir/name | sed -e 's,^contract response: ,,g' | jq '.[0]["0"]')
+
+xchain-cli evm query --method "description" -a "$args" "$cname" --abi "$ABI" > $dir/desc
+exit_code=$?
+if [[ $exit_code -ne 0 ]]; then
+	cat $dir/desc
+	exit $exit_code
+fi
+description=$(cat $dir/desc| sed -e 's,^contract response: ,,g' | jq '.[0]["0"]')
+
+xchain-cli evm query --method "owner" -a "$args" "$cname" --abi "$ABI" > $dir/owner
+exit_code=$?
+if [[ $exit_code -ne 0 ]]; then
+	cat $dir/owner
+	exit $exit_code
+fi
+owner=$(cat $dir/owner| sed -e 's,^contract response: ,,g' | jq '.[0]["0"]')
+
+cat <<EOF
+name: $name
+description: $description
+owner: $owner
+EOF
+
+# rm -r $dir
